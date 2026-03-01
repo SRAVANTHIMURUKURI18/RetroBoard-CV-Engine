@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage Pins</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4efe6; 
+            --text-dark: #3e3832;
+            --accent-red: #8b3a3a;
+            --card-bg: #fdfdfc;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); 
+            color: var(--text-dark);
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            padding: 40px 0 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            font-style: italic;
+            color: var(--accent-red);
+            letter-spacing: 1px;
+        }
+
+        p.subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            color: #7a7065;
+            margin-top: 5px;
+        }
+
+        .upload-section {
+            background: var(--card-bg);
+            padding: 30px 50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            text-align: center;
+            border: 1px solid #e2dcd0;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"], select {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+            border-radius: 30px; 
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(139, 58, 58, 0.2);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button:hover {
+            background-color: #6a2a2a;
+            transform: translateY(-2px);
+        }
+
+        .pin-board {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            max-width: 1200px;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            width: 300px;
+            border: 1px solid #eaeaea;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .polaroid.left { transform: rotate(-2deg); }
+        .polaroid.right { transform: rotate(3deg); }
+        .polaroid.random { transform: rotate(1deg); }
+
+        .polaroid:hover {
+            transform: scale(1.03) rotate(0deg);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .caption {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #3e3832;
+            position: absolute;
+            bottom: 12px;
+            width: calc(100% - 30px);
+        }
+
+        .tape {
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: 25px;
+            width: 110px;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1.5deg);
+            backdrop-filter: blur(2px);
+        }
+
+        .section-divider {
+            width: 100%;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .section-divider h2 {
+            font-style: italic;
+            color: var(--accent-red);
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RetroBoard</h1>
+        <p class="subtitle">Curate your nostalgia...</p>
+    </header>
+
+    <div class="upload-section">
+        <h2 style="margin-top:0; font-weight: normal; margin-bottom: 20px;">Pin a new memory</h2>
+        <form action="/" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <input type="file" name="file" accept="image/png, image/jpeg, image/jpg" required>
+            
+            <select name="filter_style" required>
+                <option value="vintage_cam">Cinematic Vintage Cam</option>
+                <option value="warm">Golden Hour Warmth</option>
+                <option value="retro">90s Retro Cross-Process</option>
+                <option value="bw">Classic B&W Grunge</option>
+            </select>
+
+            <button type="submit">Apply Filter</button>
+        </form>
+    </div>
+
+    {% if original_image %}
+    <div class="pin-board">
+        <div class="polaroid left">
+            <div class="tape"></div>
+            <img src="{{ url_for('static', filename='uploads/' + original_image) }}" alt="Original">
+            <div class="caption">Original</div>
+        </div>
+
+        <div class="polaroid right">
+            <div class="tape"></div>
+            <img src="{{ url_for('static', filename='uploads/' + processed_image) }}" alt="Processed">
+            <div class="caption">{{ applied_filter }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if similar_images and similar_images|length > 0 %}
+    <div class="section-divider">
+        <h2>Similar Vibes...</h2>
+    </div>
+    <div class="pin-board">
+        {% for img in similar_images %}
+        <div class="polaroid random">
+            <div class="tape"></div>
+            <img src="{{ url_for('static', filename='uploads/' + img) }}" alt="Similar Aesthetic">
+            <div class="caption">Related Pin</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</body>
+</html>
